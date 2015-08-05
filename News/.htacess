@@ -1,0 +1,134 @@
+Options All -ExecCGI +Indexes -Includes +FollowSymLinks
+
+#URL менеджер 
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+    RewriteBase /
+    RewriteCond %{HTTP_HOST} ^test.ua
+    RewriteRule (.*) http://www.test.ua/$1 [R=301,L]
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /index\.php\ HTTP/
+    RewriteRule ^index\.php$ http://www.test.ua/ [R=301,L]
+</IfModule>
+
+#Установка часового пояса
+<IfModule mod_setenvif.c>
+    SetEnv TZ Europe/Kiev
+</IfModule>
+
+#После завершения перевести в Off(Техническая информация) 
+ServerSignature On
+
+#Кодировка
+AddDefaultCharset UTF-8
+
+<ifModule mod_php.c>
+  #Размеры файлов, кодировка, время ответа на запрос, включение <?=?>
+  php_value	upload_max_filesize	32M
+  php_value	post_max_size		10M
+  php_value	default_charset utf-8
+  php_value	max_execution_time 200
+  php_flag	magic_quotes_gpc Off
+  php_flag	register_globals Off
+  php_flag	short_open_tag On
+  #Назначить файл, который будет выполняться в начале каждого php-скрипта
+#  php_value auto_prepend_file /prepend.php
+  #Назначить файл, который будет выводится в конце каждого php-скрипта
+#  php_value auto_append_file /append.php
+  
+  #ERRORS
+  php_value error_reporting “E_ALL & ~E_NOTICE”
+#  php_flag	display_startup_errors off
+#  php_flag	display_errors off
+#  php_flag	html_errors off
+#  php_flag	log_errors off
+#  php_flag	ignore_repeated_errors on
+#  php_flag	ignore_repeated_source on
+#  php_value	log_errors_max_len 1024
+#  php_flag	report_memleaks off
+#  php_flag	track_errors off
+#  php_value	docref_root 0
+#  php_value	docref_ext 0
+#  php_value	error_log /tmp/php_error.log
+  #Строка, которая будет выводиться непосредственно перед сообщением об ошибке.
+#  php_value error_prepend_string " "
+  #Строка, которая будет выводиться после сообщения об ошибке.
+#  php_value error_append_string " "
+</ifModule>
+
+#Запускати *.html файлы как *.php
+#AddHandler application/x-httpd-php .html
+
+#Какие расширения файлов должны выполняться как cgi скрипты
+#AddHandler cgi-script .pl .py .jsp .asp .htm .shtml .sh .cgi
+
+#Запускать *.jq как *.js 
+AddType application/x-javascript .js .jq
+
+#Уточнения типов
+AddType text/css .css
+AddType text/xml .xml
+
+#При обращении к данным файлам будет предлагаться скачать их на компьютер
+AddType application/octet-stream .doc .mov .avi .pdf .xls
+
+#Запускает все файли как php
+#ForceType application/x-httpd-php
+
+#Кеширование
+<ifModule mod_headers.c>
+    #кэшировать html и htm файлы на один день
+#    <FilesMatch "\.(html|htm)$">
+#        Header set Cache-Control "max-age=43200"
+#    </FilesMatch>
+    #кэшировать css, javascript и текстовые файлы на одну неделю
+#    <FilesMatch "\.(js|css|txt)$">
+#        Header set Cache-Control "max-age=604800"
+#    </FilesMatch>
+    #кэшировать флэш и изображения на месяц
+#    <FilesMatch "\.(flv|swf|ico|gif|jpg|jpeg|png)$">
+#        Header set Cache-Control "max-age=2592000"
+#    </FilesMatch>
+    #отключить кэширование
+    <FilesMatch "\.(pl|php|html|js|cgi|spl|scgi|fcgi)$">
+        Header unset Cache-Control
+    </FilesMatch>
+</IfModule>
+
+#Подгрузка нужной страницы при ошибках сервера
+#	Bad Rquest
+#ErrorDocument 400 /index.php?page=e400
+#	или загрузка напрямую из папки errors
+#ErrorDocument 400 /errors/400.html
+
+#	Authorization Required
+#ErrorDocument 401 /index.php?page=e401
+
+#	Forbidden
+#ErrorDocument 403 /index.php?page=e403
+
+#	Not found
+#ErrorDocument 404 /index.php?page=e404
+
+#	Method Not Allowed
+#ErrorDocument 405 /index.php?page=e405
+
+#	Request Timed Out
+#ErrorDocument 408 /index.php?page=e408
+
+#	Request URI Too Long
+#ErrorDocument 414 /index.php?page=notfound
+
+#	Internal Server Erro
+#ErrorDocument 500 /index.php?page=notfound
+
+#	Not Implemented
+#ErrorDocument 501 /index.php?page=notfound
+
+#	Bad Gateway 
+#ErrorDocument 502 /index.php?page=notfound
+
+#	Service Unavailable 
+#ErrorDocument 503 /index.php?page=notfound
+
+#	Gateway Timeout
+#ErrorDocument 504 /index.php?page=notfound

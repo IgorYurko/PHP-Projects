@@ -1,0 +1,5 @@
+Ошибка: SQLSTATE[HY000]: General error: 1 near "ELECT": syntax error,
+	в файле: E:\OpenServer\domains\news\classes\Querys.class.php,
+	на строке: 7,
+	время: 2014-10-13 15:14:05.
+
